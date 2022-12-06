@@ -72,13 +72,20 @@ void AnalisMRS3(void) //Master mode
 {
 uint16_t ti16;
 uint32_t ti32;
+static uint32_t OldSyCt=0;
 //------------------------------------------------
 	if (SetSemB(&AnalisRSIsBusy, 1)) goto rsisbusy;
-
+//------------------------------------------------
+	if ((SysTickCntr<OldSyCt)) //this moment SysTick roll-over from 0xf..f to 0x0..0
+	{
+		if (RSS2.CntAnalisRS>SysTickCntr) RSS2.CntAnalisRS=SysTickCntr; //if state is Idle: new question is forced
+		if (RSS2.CntTimeout>SysTickCntr) RSS2.CntTimeout=SysTickCntr+30; //if state is no idle: 3000us bonus time for next char
+	}
+	OldSyCt=SysTickCntr;
 //------------------------------------------------
   if (RSS2.State==RSstIdle)
   {
-	if (RSS2.CntAnalisRS<SysTickCntr)
+	if (RSS2.CntAnalisRS<=SysTickCntr)
     {
       RSS2.CntAnalisRS=SysTickCntr+537; //53.7ms
       RSS2.RetrCnt=0;

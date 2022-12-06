@@ -160,7 +160,7 @@ void SysTick_Handler(void)
 		  {
 		    LastKeyPressedCnt--; //prevent overflow after 1-2 days
 		  }
-//		  if (iMState.RunFlag<0x80) goto no_in_manual;
+		  if (iMState.RunFlag<0x80) goto no_in_manual;
 		  //==========NEW===========================
 		  if (Get_LEFT==0) {LFCntr++;LastKeyPressedCnt=0;} else LFCntr>>=1;
 		  if (Get_DOWN==0)  {DNCntr++;LastKeyPressedCnt=0;} else DNCntr>>=1;
