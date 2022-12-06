@@ -37,9 +37,17 @@ return (errcod);
 int16_t ReadCFGfromFlash(uint16_t pn)
 {
 int16_t errcod;
+uint32_t cs;
  if (pn>=MaxCFGProfiles) pn=MaxCFGProfiles-1;
 
- for (uint16_t i=0;i<MAXANGLES;i++) iR2_CFG.Angles[i]=E_CFG[pn].Angles[i];
+ for (int i=0;i<MaxCFGProfiles;i++)
+ {
+	 cs=CalcCRC32a32((uint32_t*)&E_CFG[i].wID_ConfigValid,((uint32_t*)&E_CFG[i].CS32));
+	 if (cs) R_CFG[i]=C_CFG; else R_CFG[i]=E_CFG[i];
+	 cs=CalcCRC32a32((uint32_t*)&E_CFG[i].wID_ConfigValid,((uint32_t*)&E_CFG[i].CS32)-1);
+	 R_CFG[i].CS32=cs;
+ }
+ iR2_CFG=R_CFG[pn];
    LocErrorFlags&=~iEF_dEmptyProfile;
    errcod=0;
 return (errcod);
