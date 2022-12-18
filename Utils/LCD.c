@@ -50,6 +50,10 @@ HiSPI2_NSS;
     HiSPI2_SCK;
 */
 }
+
+uint32_t oldx=0;
+uint32_t oldy=0;
+
 void LCD_WR_DATA8(uint8_t da) //发送数据-8位参数
 {
     HiDRS;
@@ -69,6 +73,7 @@ void LCD_WR_REG(uint8_t da)
         LCD_Writ_Bus(da>>8);
         LCD_Writ_Bus(da);
 }
+
 void Address_set(int16_t x1,int16_t y1,int16_t x2,int16_t y2)
 {
    LCD_WR_REG(0x2a);
@@ -85,9 +90,10 @@ void Address_set(int16_t x1,int16_t y1,int16_t x2,int16_t y2)
 
    LCD_WR_REG(0x2C);
 
+        oldx=0x80000;
+        oldy=0x80000;
+
 }
-uint32_t oldx=0;
-uint32_t oldy=0;
 
 void Lcd_Init(void)
 {
@@ -216,8 +222,6 @@ void Lcd_Init(void)
 
      LCD_WR_REG(0x29);    //Display on
      LCD_WR_REG(0x2c);
-
-     LCD_SetPoint(0,0,0xffff); //to set addresses with commands 2Ah 2Bh
 }
 //清屏函数
 //Color:要清屏的填充色
@@ -275,7 +279,7 @@ noset_X_addr_is_autoInc:
      }
     }
 
-    if (fl) LCD_WR_REG(0x2C); //set Xcntr and Ycntr to new 2Ah 2Bh values
+    if (fl) LCD_WR_REG(0x2C); //set Xcntr and Ycntr to new(last set) 2Ah 2Bh values
     HiDRS;
     oldx=x;oldy=y;
     LCD_Writ_Bus(pcolor>>8);
