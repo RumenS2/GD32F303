@@ -252,22 +252,32 @@ void LCD_Clear(uint16_t Color)
 void LCD_SetPoint(uint32_t x,uint32_t y, uint16_t pcolor)
 {
 uint32_t fl=0;
-    if (x!=oldx)
-    {
-       if (x==(oldx+1)) {goto noset_X_addr_is_autoInc;}
-       fl=1;
-       LCD_WR_REG(0x2a);
-       LCD_WR_DATA8(x>>8);
-       LCD_WR_DATA8(x);
-       if (oldx==0x80000)
+       if (x!=(oldx+1)) // noset_X_addr_is_autoInc;
        {
-         LCD_WR_DATA8(320>>8);
-         LCD_WR_DATA8(320&0xff);
+		   fl=1;
+		   LCD_WR_REG(0x2a);
+		   LCD_WR_DATA8(x>>8);
+		   LCD_WR_DATA8(x);
+		   if (oldx==0x80000)
+		   {
+			 LCD_WR_DATA8(320>>8);
+			 LCD_WR_DATA8(320&0xff);
+		   }
        }
-    }
-noset_X_addr_is_autoInc:
+
     if (y!=oldy)
     {
+//    	if (fl==0)
+//    	{
+//    	       LCD_WR_REG(0x2a);
+//    	       LCD_WR_DATA8(x>>8);
+//    	       LCD_WR_DATA8(x);
+//    	       if (oldx==0x80000)
+//    	       {
+//    	         LCD_WR_DATA8(320>>8);
+//    	         LCD_WR_DATA8(320&0xff);
+//    	       }
+//    	}
      fl=1;
      LCD_WR_REG(0x2b);
      LCD_WR_DATA8(y>>8);
