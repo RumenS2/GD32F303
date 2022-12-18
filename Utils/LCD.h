@@ -18,8 +18,8 @@ extern  uint16_t BACK_COLOR;   //背景色，画笔色
 void Lcd_Init(void);
 void LCD_Clear(uint16_t Color);
 
-void LCD_SetPoint(uint16_t x,uint16_t y, uint16_t pcolor);//画点
-void FillBox(int16_t startx,int16_t starty,int16_t endx,int16_t endy,uint16_t rC);
+void LCD_SetPoint(uint32_t x,uint32_t y, uint16_t pcolor);//画点
+void FillBox(int32_t startx,int32_t starty,int32_t endx,int32_t endy,uint16_t rC);
 
 
 #endif /* INC_LCD_H_ */

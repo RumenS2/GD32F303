@@ -170,8 +170,8 @@ void SysTick_Handler(void)
 
 
 		  if (Get_CENTER==0) {S5Cntr++;LastKeyPressedCnt=0;} else S5Cntr>>=1;
-		  if (Get_ChA==0) {SACntrLo++;SACntrHi>>=1;LastKeyPressedCnt=0;} else {SACntrHi++;SACntrLo>>=1;}
-		  if (Get_ChB==0) {SBCntrLo++;SBCntrHi>>=1;LastKeyPressedCnt=0;} else {SBCntrHi++;SBCntrLo>>=1;}
+		  if (Get_ChA==0) {SACntrLo++;SACntrHi>>=1;} else {SACntrHi++;SACntrLo>>=1;}
+		  if (Get_ChB==0) {SBCntrLo++;SBCntrHi>>=1;} else {SBCntrHi++;SBCntrLo>>=1;}
 
 
 		     if (SACntrHi==10) {NewEnC|=0x01;}
@@ -180,6 +180,7 @@ void SysTick_Handler(void)
 		     if (SBCntrLo==10) {NewEnC&=~0x02;}
 		  //not needed, CurrentPosition is restored with big delay   if (EncFirstRun<10) {OldEnC=NewEnC;EncFirstRun++;}
 		     if (NewEnC==OldEnC) {goto NoEncChg;}
+		     LastKeyPressedCnt=0;
 		     if ((NewEnC>>1)^(OldEnC&0x01))  //NewEnc.bit1 XOR OldEnc.bit0
 		     {locCurrentPosition++;DirectionSignIs=1;}  //DirectionSignIs is +1 or -1
 		     else

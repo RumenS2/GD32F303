@@ -364,13 +364,13 @@ static int16_t mTabIndex,mAnt,mPedal;
  if (iMState.Ant!=mAnt)
  {
      mAnt=iMState.Ant; DM_SetFontN(AnonymosProFont15x28);DM_gotoxy(60,0);DM_meth=0;
-     rTextColor=CR_red_FF0000;rBackgroundColor=MAIN_BCKG_COLOR;if (mAnt>150) DM_printf("Z"); else DM_printf(" ");
+     rTextColor=CR_red_FF0000;rBackgroundColor=MAIN_BCKG_COLOR;if (mAnt>160) DM_printf("Z"); else DM_printf(" ");
  }
 
  if (iMState.Pedal!=mPedal)
  {
      mPedal=iMState.Pedal; DM_SetFontN(AnonymosProFont15x28);DM_gotoxy(75,0);DM_meth=0;
-     rTextColor=CR_red_FF0000;rBackgroundColor=MAIN_BCKG_COLOR;if (mPedal<150) DM_printf("P"); else DM_printf(" ");
+     rTextColor=CR_red_FF0000;rBackgroundColor=MAIN_BCKG_COLOR;if (mPedal<100) DM_printf("P"); else if (mPedal<200) DM_printf("?"); else DM_printf(" ");
  }
 
  if (iMState.RunFlag!=mRunFlag)

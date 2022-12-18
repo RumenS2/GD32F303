@@ -86,8 +86,8 @@ void Address_set(int16_t x1,int16_t y1,int16_t x2,int16_t y2)
    LCD_WR_REG(0x2C);
 
 }
-uint16_t oldx=0xaaaa;
-uint16_t oldy=0xaaaa;
+uint32_t oldx=0;
+uint32_t oldy=0;
 
 void Lcd_Init(void)
 {
@@ -99,8 +99,8 @@ void Lcd_Init(void)
         delayms(20);
         LoSPI2_NSS; //== LoDCS;
         delayms(2);
-        oldx=0xaaaa;
-        oldy=0xaaaa;
+        oldx=0x80000;
+        oldy=0x80000;
 
         LCD_WR_REG(0xCB);
     LCD_WR_DATA8(0x39);
@@ -217,15 +217,16 @@ void Lcd_Init(void)
      LCD_WR_REG(0x29);    //Display on
      LCD_WR_REG(0x2c);
 
+     LCD_SetPoint(0,0,0xffff); //to set addresses with commands 2Ah 2Bh
 }
 //ÇåÆÁº¯Êý
 //Color:ÒªÇåÆÁµÄÌî³äÉ«
 
         // Çàêðàøèâàíèå ïðÿìîóãîëüíèêà â çàäàííûé öâåò
-void FillBox(int16_t startx,int16_t starty,int16_t endx,int16_t endy,uint16_t rC)
+void FillBox(int32_t startx,int32_t starty,int32_t endx,int32_t endy,uint16_t rC)
 {
         uint8_t VH,VL;
-    int16_t begX,endX;
+    int32_t begX,endX;
     uint32_t i,imax;
     VH=rC>>8;VL=rC;
            begX=startx<endx ? startx:endx;
@@ -244,38 +245,39 @@ void LCD_Clear(uint16_t Color)
 	FillBox(0,0,LCD_TPIXL_X-1,LCD_TPIXL_Y-1,Color);
 }
 
-void LCD_SetPoint(uint16_t x,uint16_t y, uint16_t pcolor)
+void LCD_SetPoint(uint32_t x,uint32_t y, uint16_t pcolor)
 {
-
-//    if (((x-1)==oldx)&&(y=oldy)){oldx=x;goto wdot;}
-
+uint32_t fl=0;
     if (x!=oldx)
     {
-     LCD_WR_REG(0x2a);
-     LCD_WR_DATA8(x>>8);
-     LCD_WR_DATA8(x);
-     LCD_WR_DATA8(320>>8);
-     LCD_WR_DATA8(320&0xff);
-//     LCD_WR_REG(0x2C);
-     oldx=x;
+       if (x==(oldx+1)) {goto noset_X_addr_is_autoInc;}
+       fl=1;
+       LCD_WR_REG(0x2a);
+       LCD_WR_DATA8(x>>8);
+       LCD_WR_DATA8(x);
+       if (oldx==0x80000)
+       {
+         LCD_WR_DATA8(320>>8);
+         LCD_WR_DATA8(320&0xff);
+       }
     }
+noset_X_addr_is_autoInc:
     if (y!=oldy)
     {
+     fl=1;
      LCD_WR_REG(0x2b);
      LCD_WR_DATA8(y>>8);
      LCD_WR_DATA8(y);
-     LCD_WR_DATA8(240>>8);
-     LCD_WR_DATA8(240&0xff);
-     oldy=y;
+     if (oldy==0x80000)
+     {
+       LCD_WR_DATA8(240>>8);
+       LCD_WR_DATA8(240&0xff);
+     }
     }
 
-    LCD_WR_REG(0x2C);
-	HiDRS;
+    if (fl) LCD_WR_REG(0x2C); //set Xcntr and Ycntr to new 2Ah 2Bh values
+    HiDRS;
+    oldx=x;oldy=y;
     LCD_Writ_Bus(pcolor>>8);
     LCD_Writ_Bus(pcolor);
 }
-
-
-
-
-
