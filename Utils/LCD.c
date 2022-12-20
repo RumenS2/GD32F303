@@ -267,17 +267,17 @@ uint32_t fl=0;
 
     if (y!=oldy)
     {
-//    	if (fl==0)
-//    	{
-//    	       LCD_WR_REG(0x2a);
-//    	       LCD_WR_DATA8(x>>8);
-//    	       LCD_WR_DATA8(x);
-//    	       if (oldx==0x80000)
-//    	       {
-//    	         LCD_WR_DATA8(320>>8);
-//    	         LCD_WR_DATA8(320&0xff);
-//    	       }
-//    	}
+    	if (fl==0)
+    	{
+    	       LCD_WR_REG(0x2a);
+    	       LCD_WR_DATA8(x>>8);
+    	       LCD_WR_DATA8(x);
+    	       if (oldx==0x80000)
+    	       {
+    	         LCD_WR_DATA8(320>>8);
+    	         LCD_WR_DATA8(320&0xff);
+    	       }
+    	}
      fl=1;
      LCD_WR_REG(0x2b);
      LCD_WR_DATA8(y>>8);
