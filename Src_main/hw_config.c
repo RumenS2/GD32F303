@@ -211,7 +211,9 @@ void MX_GPIO_Init(void)
     rcu_periph_clock_enable(RCU_GPIOB);
     rcu_periph_clock_enable(RCU_GPIOC);
 
-    gpio_pin_remap_config(GPIO_SWJ_DISABLE_REMAP, ENABLE); //Disconnect jtag, from pa13 pa14 pa15 pb3 pb4
+    rcu_periph_clock_enable(RCU_AF);//Disconnect JTAG, from pa13 pa14 pa15 pb3 pb4
+    gpio_pin_remap_config(GPIO_SWJ_DISABLE_REMAP, ENABLE); //Disconnect JTAG, from pa13 pa14 pa15 pb3 pb4
+    uint32_t tmpreg=AFIO_PCF0;tmpreg&=~(0x07<<24);tmpreg|=(0x04<<24);AFIO_PCF0=tmpreg; //same as above
 
     gpio_bit_reset(GPIOA, GPIO_PIN_ALL);
     gpio_bit_reset(GPIOB, GPIO_PIN_ALL);
